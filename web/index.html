@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NoteIt</title>
+
+
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src * data: blob: filesystem: about: ws: wss: 'unsafe-inline' 'unsafe-eval';
+                 style-src * 'unsafe-inline';
+                 script-src * 'unsafe-inline' 'unsafe-eval'">
+
+  <style>
+    html, body { background-color: rgba(0,0,0,0) !important; }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+  </style>
+
+  <link rel="stylesheet" href="main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="overlay" id="webnoteit" role="dialog" aria-modal="true" aria-labelledby="noteit-title" style="display:none;">
+    <div class="panel">
+      <h2 id="noteit-title">NoteIt</h2>
+
+      <label for="noteText" class="sr-only">Note text</label>
+      <textarea id="noteText" placeholder="Type your message"></textarea>
+
+      <div class="buttons">
+        <button class="cancel" id="closeBtn" type="button" aria-label="Cancel">Cancel</button>
+        <button class="confirm" id="submitBtn" type="button" aria-label="Confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.body.style.backgroundColor = "transparent";
+    document.documentElement.style.backgroundColor = "transparent";
+  </script>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
