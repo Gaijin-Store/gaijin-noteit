@@ -63,6 +63,13 @@ All settings are inside `config.lua`:
 
 ---
 
+## 💡 Inspiration
+
+This project was **inspired by an existing note system** that served as a creative reference during development.  
+All code, logic, and structure were **entirely rewritten from scratch** to ensure better performance, optimization, and maintainability while preserving the original idea of immersive in-game notes.
+
+---
+
 ## 📜 License & Terms of Use
 
 This resource is **100% free** and provided for educational and creative use within the FiveM community.  
