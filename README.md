@@ -85,7 +85,7 @@ You are **not** allowed to:
 - ❌ Re-upload it under a different name or author.
 - ❌ Claim ownership or remove original credits.
 
-By using this resource, you agree to follow the [Cfx.re Platform License Agreement](https://runtime.fivem.net/legal/) and the [Rockstar Community Guidelines](https://www.rockstargames.com/community-guidelines).
+By using this resource, you agree to follow the [Cfx.re Platform License Agreement](https://fivem.net/terms) and the [Rockstar Community Guidelines](https://www.rockstargames.com/community-guidelines).
 
 ---
 
