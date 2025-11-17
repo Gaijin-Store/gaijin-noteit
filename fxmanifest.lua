@@ -5,7 +5,7 @@ lua54 'yes'
 name 'gaijin-noteit'
 author 'Gaijin Store'
 description 'NoteIt - Sticky notes for FiveM'
-version '1.1.2'
+version '1.2.0'
 
 ui_page 'web/index.html'
 
