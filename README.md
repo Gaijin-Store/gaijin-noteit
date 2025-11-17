@@ -60,3 +60,37 @@ All settings are inside `config.lua`:
 - `TargetIcon` / `TargetLabel` → Icon and label for reading notes
 - `PlaceLabel` → Label when placing notes
 - `MaxTextLength` → Max characters per note
+
+---
+
+## 💡 Inspiration
+
+This project was **inspired by an existing note system** that served as a creative reference during development.  
+All code, logic, and structure were **entirely rewritten from scratch** to ensure better performance, optimization, and maintainability while preserving the original idea of immersive in-game notes.
+
+---
+
+## 📜 License & Terms of Use
+
+This resource is **100% free** and provided for educational and creative use within the FiveM community.  
+Commercial resale, redistribution behind paywalls, or inclusion in paid script bundles is **strictly prohibited**.
+
+You are allowed to:
+- ✅ Use and modify this resource for personal or server use.
+- ✅ Share it publicly **with proper credit** to **Gaijin Store**.
+- ✅ Include it in open-source projects (with attribution).
+
+You are **not** allowed to:
+- ❌ Sell, rent, or offer this resource (or modified versions) for money.
+- ❌ Re-upload it under a different name or author.
+- ❌ Claim ownership or remove original credits.
+
+By using this resource, you agree to follow the [Cfx.re Platform License Agreement](https://fivem.net/terms) and the [Rockstar Community Guidelines](https://www.rockstargames.com/community-guidelines).
+
+---
+
+🖋️ **Author:** [Gaijin Store](https://github.com/Gaijin-Store)  
+📅 **Version:** 1.1.2  
+💬 For feedback or issues: open an [Issue](https://github.com/Gaijin-Store/gaijin-noteit/issues)
+
+---
