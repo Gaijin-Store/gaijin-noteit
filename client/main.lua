@@ -81,6 +81,25 @@ local function removePlacementZone()
     end
 end
 
+-- remove a placed note and its individual ox_target zone
+local function removePlacedNote(note)
+    if not note then return end
+
+    if note.zoneId then
+        pcall(function()
+            exports.ox_target:removeZone(note.zoneId)
+        end)
+        note.zoneId = nil
+    end
+
+    for i, n in ipairs(placedNoteIts) do
+        if n == note then
+            table.remove(placedNoteIts, i)
+            break
+        end
+    end
+end
+
 -- starts placement mode with ONE big zone centered on the player
 local function startPlacementMode()
     removePlacementZone()
@@ -93,11 +112,11 @@ local function startPlacementMode()
     local maxText = (Config and Config.MaxTextLength) or 160
 
     noteitZone = exports.ox_target:addSphereZone({
-        coords = center,
-        radius = radius,
-        debug  = false,
-        drawSprite = true,
-        options = {
+        coords      = center,
+        radius      = radius,
+        debug       = false,
+        drawSprite  = false,
+        options     = {
             {
                 name  = 'noteit_place',
                 icon  = icon,
@@ -123,9 +142,9 @@ local function startPlacementMode()
 
     if lib and lib.notify then
         lib.notify({
-            title = 'NoteIt',
-            description = ('Ready to place your note?'),
-            type = 'inform'
+            title       = 'NoteIt',
+            description = 'Ready to place your note?',
+            type        = 'inform'
         })
     end
 end
@@ -134,12 +153,16 @@ end
 exports('useItem', function(item)
     if isUsingNoteIt then return end
     if item and Config and Config.ItemName and item.name ~= Config.ItemName then
-        if Config.DebugDev then print('[noteit][DEBUG] useItem ignored: item != Config.ItemName') end
+        if Config and Config.DebugDev then
+            print('[noteit][DEBUG] useItem ignored: item != Config.ItemName')
+        end
         return
     end
 
     isUsingNoteIt = true
-    if Config and Config.DebugDev then print('[noteit][DEBUG] useItem export called') end
+    if Config and Config.DebugDev then
+        print('[noteit][DEBUG] useItem export called')
+    end
     startPlacementMode()
 end)
 
@@ -165,20 +188,69 @@ RegisterNUICallback('createNoteit', function(data, cb)
     end
 
     local rawText = tostring((data and data.text) or '')
-    local text = rawText:sub(1, (Config and Config.MaxTextLength) or 160):gsub('%s+$','')
+    local text = rawText
+        :sub(1, (Config and Config.MaxTextLength) or 160)
+        :gsub('%s+$', '')
+
     if text == '' then
         if lib and lib.notify then
-            lib.notify({ title = 'NoteIt', description = 'Text cannot be empty.', type = 'error' })
+            lib.notify({
+                title       = 'NoteIt',
+                description = 'Text cannot be empty.',
+                type        = 'error'
+            })
         end
         if cb then cb({}) end
         return
     end
 
     local place = tempNoteItCoords + vec3(0.0, 0.0, 0.48)
-    placedNoteIts[#placedNoteIts + 1] = { coords = place, text = text }
 
+    -- build note object for world + target
+    local note = {
+        coords = place,
+        text   = text
+    }
+
+    placedNoteIts[#placedNoteIts + 1] = note
+
+    -- individual ox_target zone for this placed note
+    local targetRadius = (Config and Config.NoteTargetRadius) or 1.5
+    local icon         = (Config and Config.TargetIcon) or 'fas fa-sticky-note'
+    local tearLabel    = (Config and Config.NoteTearLabel) or 'Tear sticky'
+
+    note.zoneId = exports.ox_target:addSphereZone({
+        coords = place,
+        radius = targetRadius,
+        debug  = false,
+        options = {
+            {
+                name  = 'noteit_tear',
+                icon  = icon,
+                label = tearLabel,
+                onSelect = function()
+                    removePlacedNote(note)
+
+                    if lib and lib.notify then
+                        lib.notify({
+                            title       = 'NoteIt',
+                            description = 'You tore the sticky.',
+                            type        = 'success'
+                        })
+                    end
+                end
+            }
+        }
+    })
+
+    -- clamp local notes to maximum, removing the oldest (and its zone)
     local maxLocal = (Config and Config.MaxLocalNotes) or 200
-    if #placedNoteIts > maxLocal then table.remove(placedNoteIts, 1) end
+    if #placedNoteIts > maxLocal then
+        local oldest = placedNoteIts[1]
+        if oldest then
+            removePlacedNote(oldest)
+        end
+    end
 
     if Config and Config.DebugDev then
         print(('[noteit][DEBUG] Note created at %s'):format(
@@ -205,9 +277,11 @@ CreateThread(function()
             local maxDist = (Config and Config.ReadDistance) or 12.0
             for i = 1, #placedNoteIts do
                 local note = placedNoteIts[i]
-                if #(p - note.coords) < maxDist then
-                    DrawText3D(note.coords, note.text)
-                    waitMs = 5
+                if note and note.coords then
+                    if #(p - note.coords) < maxDist then
+                        DrawText3D(note.coords, note.text)
+                        waitMs = 5
+                    end
                 end
             end
         end
@@ -221,4 +295,13 @@ AddEventHandler('onResourceStop', function(res)
     removePlacementZone()
     SetNuiFocus(false, false)
     TriggerScreenblurFadeOut(0)
+
+    -- best effort: remove individual zones as well
+    for _, note in ipairs(placedNoteIts) do
+        if note.zoneId then
+            pcall(function()
+                exports.ox_target:removeZone(note.zoneId)
+            end)
+        end
+    end
 end)
